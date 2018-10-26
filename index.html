@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Gästefahrt 27.10.2018</title>
+		<meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+		<script src="assets/js/jquery/3.3.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="assets/css/leaflet/1.3.4/leaflet.css"/>
+		<script src="assets/js/leaflet/1.3.4/leaflet.js"></script>
+		<script src="assets/js/leaflet.ajax/2.1.0/leaflet.ajax.js"></script>
+
+		<style>
+		body {
+			padding: 0;
+			margin: 0;
+        	}
+		html, body { width: 100%; height : 100%; }
+		#map {height:100%;
+	            width: 100%;
+        	}
+		</style>
+</head>
+<body>
+	<div id="map"></div>
+	<script>
+		var map = L.map('map').setView([49.79722282465156, 8.75267028808594], 10);
+
+		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+			maxZoom: 18,
+			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+			id: 'mapbox.light'
+		}).addTo(map);
+
+
+		L.geoJson
+			.ajax("./data/fahrt.geojson", {
+				style: {
+					"color": "#ff7f00",
+					"weight": 5
+				}
+			}).addTo(map);
+
+		L.geoJson
+			.ajax("./data/haltestellen.geojson", {
+				pointToLayer: function(geoJsonPoint, latlng) {
+					return L.circleMarker(latlng);
+				},
+				style: {
+					"color": "#000000",
+					"fillColor": "#ff7f00",
+					"radius": 8,
+					"weight": 1,
+					"opacity": 1,
+					"fillOpacity": 1,
+				},
+				onEachFeature: function(f, l) {
+					l.bindTooltip(f.properties.bezeichnun, {
+						permanent:true
+					});
+				}
+			}).addTo(map);
+
+	</script>
+
+
+</body>
+
+</html>
